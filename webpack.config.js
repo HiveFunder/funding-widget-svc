@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: path.resolve(__dirname, 'client/index.jsx'),
+  devtool: 'source-map',
   mode: 'development',
   node: {
     fs: 'empty',
@@ -13,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
   },
   resolve: {
-    extensions: ['.webpack.js', '.web.js', '.json', '.js', '.jsx'],
+    extensions: ['.js', '.jsx']
   },
   module: {
     rules: [

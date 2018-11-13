@@ -4,7 +4,13 @@ const Path = require('path');
 const moment = require('moment');
 const db = require('./connection.js');
 
-const filePath = Path.resolve(__dirname, './seedData.csv');
+let filePath = Path.resolve(__dirname, './seedData.csv');
+
+// if in windows, replace all \ with /
+if (process.platform === 'win32') {
+  filePath = filePath.replace(/\\/g, '/');
+}
+
 // a series of query strings to send the database
 const createDatabase = 'CREATE DATABASE IF NOT EXISTS funding_stats;';
 const useDatabase = 'USE funding_stats;';
