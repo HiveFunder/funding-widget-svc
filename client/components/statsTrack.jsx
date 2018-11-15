@@ -1,6 +1,4 @@
 import React from 'react';
-import Promise from 'bluebird';
-import $ from 'jquery';
 import Moment from 'moment';
 import BackButton from './BackButton';
 import ProgressBar from './ProgressBar';
@@ -27,14 +25,11 @@ class StatsTrack extends React.Component {
   loadCampaignStats() {
     const currentUrl = window.location.href.split('/');
     const campaignId = currentUrl[currentUrl.length - 1];
-    const promise = new Promise((resolve) => {
-      // ask the server to retrieve campaign data from db
-      $.get(`http://localhost:3002/${campaignId}/stats`, (data) => {
-        resolve(data);
-      });
-    });
-
-    promise.then((stats) => { // update component state with db data
+    
+    // ask the server to retrieve campaign data from db
+    fetch(`http://localhost:3002/${campaignId}/stats`)
+    .then(res => res.json())
+    .then((stats) => { // update component state with db data
       this.setState({
         pledged: stats.pledged,
         goal: stats.goal,
@@ -73,11 +68,11 @@ class StatsTrack extends React.Component {
     // format backers numbers according to browser locale
     const backerCount = backers.toLocaleString(undefined);
     // calculate remaining funding time
-    let timeLeft = Moment(deadline).diff(Moment(), 'days');
+    let timeLeft = Moment(deadline).diff(Moment(), 'days') || 0;
     let timeUnits = 'days to go';
 
     if (timeLeft <= 0) { // reformat remaining time if less than one day
-      timeLeft = Moment(deadline).diff(Moment(), 'hours', true).toLocaleString(undefined);
+      timeLeft = Moment(deadline).diff(Moment(), 'hours', true) || 0;
       timeUnits = 'hours to go';
     }
 

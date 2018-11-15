@@ -22,7 +22,9 @@ coverage
 
 # Compiled Dirs (http://nodejs.org/api/addons.html)
 public/bundle.js
-
+public/bundle.js.map
 
 db/connection.js
-db/seedData.csv
+*.csv
+
+package-lock.json

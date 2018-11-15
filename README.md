@@ -1,39 +1,57 @@
-# Kickstand
+# HiveFunder
 
 > A detail page for a crowd-funding campaign
 
 ## Related Projects
+  - https://github.com/HiveFunder/comments-module
+  - https://github.com/HiveFunder/support-module-svc
+  - https://github.com/HiveFunder/updates-service
 
-  - https://github.com/FEC-Kickstand/comments-module
-  - https://github.com/FEC-Kickstand/support-module-svc
-  - https://github.com/FEC-Kickstand/updates-service
-  - https://github.com/FEC-Kickstand/funding-widget
+## CRUD Documentation
 
-## Table of Contents
+### Data Shape
+  - Campaign: Campaign name, description, author, currency, pledge amount, pledge goal, backers, end date, type, location
+  - Pledge: username, pledge amount, date
 
-1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
+### Page Endpoint
+/:author/:campaignId/
 
-## Usage
+### GET - /api/:campaign/stats
+  - Get stats from a single campaign, for an item detail view.
+  - Query format: Campaign ID (number)
+  - Response data shape: Refer to Campaign data shape above
+  - Error code: 400 for invalid author or campaign
 
-> Some usage instructions
+### GET - /api/:author/campaigns
+  - Get all campaigns for given author
+  - Query format: campaign user (string)
+  - Response data shape: Array of all Campaigns from author
+  - Error code: 400 for invalid author
 
-## Requirements
+### POST - /api/new/stats
+  - Creates a new campaign.
+  - Body data shape: Campaign name, description, author, currency, pledge goal, end date, type, location
+  - Error code: 400 if any fields in the body are missing
 
-An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).
+### ( Backlog ) POST - /api/:campaign/pledge
+  - Creates a new pledge for a given campaign.
+  - Query format: Campaign ID (number)
+  - Body data shape: Refer to Pledge data shape above
+  - Error code: 400 for invalid author or campaign
 
-- Node 6.13.0
-- etc
+### PATCH - /api/:campaign/stats
+  - Updates an existing campaign pledge amount and numbers
+  - Query format: Campaign ID (number)
+  - Body data shape: Pledge amount, new pledges
+  - Error code: 400 for invalid author or campaign
 
-## Development
+### PUT - /api/:campaign/stats
+  - Updates an existing campaign.
+  - Query format: Campaign ID (number)
+  - Body data shape: Refer to campaign data shape above
+  - Error code: 400 for invalid author or campaign
 
-### Installing Dependencies
-
-From within the root directory:
-
-```sh
-npm install -g webpack
-npm install
-```
-
+### DELETE - /api/:campaign/stats
+  - Deletes an existing campaign, and all pledges for the campaign.
+  - Query format: Campaign ID (number)
+  - Error code: 400 for invalid author or campaign
