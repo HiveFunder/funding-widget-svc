@@ -43,7 +43,7 @@ const writePrimaryData = function writePrimaryData() {
     const country = Math.floor(Math.random() * countries.length);
     const type = Math.floor(Math.random() * types.length);
 
-    data.push(`${name}, ${desc}, ${author}, ${currency}, ${pledgeGoal}, ${pledge}, ${backers}, ${endDate}, ${country}, ${type}`);
+    data.push(`${name},${desc},${author},${currency},${pledgeGoal},${pledge},${backers},${endDate},${country},${type}`);
   }
 
   // Insert newline at end
@@ -72,7 +72,7 @@ const writePledgeData = function writePledgeData(i) {
       const pledge = Math.floor(Math.random() * 100) + 1;
       const pledgeTime = START_DATE + Math.floor(Math.random() * 30) * 86400;
 
-      data.push(`${name}, ${pledge}, ${pledgeTime}, ${k}`);
+      data.push(`${name},${pledge},${pledgeTime},${k}`);
     }
   }
   
@@ -90,30 +90,20 @@ const writePledgeData = function writePledgeData(i) {
     .catch((err) => { console.error(err) });
 };
 
-// Create CSV files with up to 10 million entries of campaigns (projects) and 50 million pledges
-async function writeAllData() {
-  for (let i = 0; i < 10; i++) {
-    //await writePrimaryData();
-  }
-  for (let i = 0; i < 100; i++) {
-    await writePledgeData(i);
-  }
-};
-
 async function seedCSVData() {
-  // let csvFile = path.resolve(__dirname, './largeData.csv');
-  // if (process.platform === 'win32') {
-    // csvFile = csvFile.replace(/\\/g, '/');
-  // }
+  let csvFile = path.resolve(__dirname, './largeData.csv');
+  if (process.platform === 'win32') {
+    csvFile = csvFile.replace(/\\/g, '/');
+  }
 
-  // start = new Date().getTime();
+  start = new Date().getTime();
 
-  // // Create campaign table, load to DB
-  // await db.query(`CREATE TABLE IF NOT EXISTS campaigns (campaign TEXT, description TEXT, author TEXT, currency TEXT, pledged INT,
-    // goal INT, backers INT, endDate INT, location INT, _type INT);`);
-  // await db.query(`COPY campaigns FROM '${csvFile}' WITH (FORMAT csv);`);
+  // Create campaign table, load to DB
+  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (campaign TEXT, description TEXT, author TEXT, currency TEXT, pledged INT,
+    goal INT, backers INT, endDate INT, location INT, _type INT);`);
+  await db.query(`COPY campaigns FROM '${csvFile}' WITH (FORMAT csv);`);
 
-  // console.log(`Seeded campaigns in ${new Date().getTime() - start} ms`);
+  console.log(`Seeded campaigns in ${new Date().getTime() - start} ms`);
 
   start = new Date().getTime();
 
@@ -126,7 +116,7 @@ async function seedCSVData() {
     if (process.platform === 'win32') {
       csvFile = csvFile.replace(/\\/g, '/');
     }
-    await db.query(`COPY campaigns FROM '${csvFile}' WITH (FORMAT csv);`)
+    await db.query(`COPY pledges FROM '${csvFile}' WITH (FORMAT csv);`)
       .catch((err) => { console.error(err) });
   }
 
@@ -134,5 +124,16 @@ async function seedCSVData() {
   db.end();
 }
 
-writeAllData();
-seedCSVData();
+// Create CSV files with up to 10 million entries of campaigns (projects) and 50 million pledges
+async function writeAndSeed() {
+  for (let i = 0; i < 10; i++) {
+    await writePrimaryData();
+  }
+  for (let i = 0; i < 100; i++) {
+    await writePledgeData(i);
+  }
+  
+  await seedCSVData();
+};
+
+writeAndSeed();
