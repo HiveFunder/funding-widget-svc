@@ -99,16 +99,16 @@ async function seedCSVData() {
   start = new Date().getTime();
 
   // Create campaign table, load to DB
-  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (campaign TEXT, description TEXT, author TEXT, currency TEXT, pledged INT,
+  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (id SERIAL PRIMARY KEY, campaign TEXT, description TEXT, author TEXT, currency TEXT, pledged INT,
     goal INT, backers INT, endDate INT, location INT, _type INT);`);
-  await db.query(`COPY campaigns FROM '${csvFile}' WITH (FORMAT csv);`);
+  await db.query(`COPY campaigns(campaign, description, author, currency, pledged, goal, backers, endDate, location, _type) FROM '${csvFile}' WITH (FORMAT csv);`);
 
   console.log(`Seeded campaigns in ${new Date().getTime() - start} ms`);
 
   start = new Date().getTime();
 
   // Create and fill pledges table
-  await db.query(`CREATE TABLE IF NOT EXISTS pledges (name TEXT, pledge INT, pledgeTime INT, campaignIdx INT);`)
+  await db.query(`CREATE TABLE IF NOT EXISTS pledges (id SERIAL PRIMARY KEY, name TEXT, pledge INT, pledgeTime INT, campaignIdx INT);`)
     .catch((err) => { console.error(err) });
 
   for (let i = 0; i < 100; i++) {
@@ -116,7 +116,7 @@ async function seedCSVData() {
     if (process.platform === 'win32') {
       csvFile = csvFile.replace(/\\/g, '/');
     }
-    await db.query(`COPY pledges FROM '${csvFile}' WITH (FORMAT csv);`)
+    await db.query(`COPY pledges(name, pledge, pledgeTime, campaignIdx) FROM '${csvFile}' WITH (FORMAT csv);`)
       .catch((err) => { console.error(err) });
   }
 
@@ -132,7 +132,7 @@ async function writeAndSeed() {
   for (let i = 0; i < 100; i++) {
     await writePledgeData(i);
   }
-  
+
   await seedCSVData();
 };
 
