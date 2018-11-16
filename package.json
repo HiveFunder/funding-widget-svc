@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npx webpack -w",
     "server-dev": "nodemon server/server.js",
-    "seed": "node db/seed.js",
+    "seed": "node db/largeSeed.js",
     "test": "jest --coverage"
   },
   "jest": {
