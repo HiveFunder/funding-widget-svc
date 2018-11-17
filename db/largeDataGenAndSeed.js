@@ -15,8 +15,10 @@ const DAYS = 90;
 const writePrimaryData = function writePrimaryData(idx) {
   const data = idx === 0 ? ['campaign,description,author,user,country,pledged,goal,backers,endDate,_type'] : [];
   for (let i = 0; i < LIMIT / CAMPAIGNS_PER_PERSON; i += 1) {
-    const author = faker.name.findName();
-    const user = faker.internet.userName();
+    const first = faker.name.firstName(), last = faker.name.lastName();
+
+    const author = `${first} ${last}`;
+    const user = `${first}${Math.floor(Math.random() * 1000)}`;
     const country = Math.floor(Math.random() * COUNTRIES);
     const desc = "Campaign description";
 
@@ -24,7 +26,7 @@ const writePrimaryData = function writePrimaryData(idx) {
       const name = faker.commerce.productName();
       const goal = Math.floor(Math.random() * 100000) + 50000;
       const pledge = Math.floor(Math.random() * 100) > 50 ? 
-        Math.floor(Math.random * goal) + 100000 : Math.floor(Math.random() * goal);
+        Math.floor(Math.random() * goal) + 100000 : Math.floor(Math.random() * goal);
       const backers = Math.floor(Math.random() * 500);
       const endDate = START_DATE + Math.floor(Math.random() * DAYS + 15) * 86400;
       const type = Math.floor(Math.random() * TYPES);
@@ -86,9 +88,11 @@ async function seedPostgresData() {
   start = new Date().getTime();
 
   // Create campaign table, load to DB
-  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (id SERIAL PRIMARY KEY, campaign TEXT, description TEXT, author TEXT, user TEXT, country INT, pledged INT,
-    goal INT, backers INT, endDate INT, _type INT);`);
-  await db.query(`COPY campaigns(campaign, description, author, user, country, pledged, goal, backers, endDate, _type) FROM '${csvFile}' CSV HEADER;`);
+  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (id SERIAL PRIMARY KEY, campaign TEXT, description TEXT, author TEXT, _user TEXT, country INT, pledged INT,
+    goal INT, backers INT, endDate INT, _type INT);`)
+    .catch((err) => { console.error(err); });
+  await db.query(`COPY campaigns(campaign, description, author, _user, country, pledged, goal, backers, endDate, _type) FROM '${csvFile}' CSV HEADER;`)
+    .catch((err) => { console.error(err); });
 
   console.log(`Seeded campaigns in ${new Date().getTime() - start} ms`);
 
