@@ -54,9 +54,9 @@ app.get('/api/:campaign/stats', (req, res) => {
 });
 
 // FIXME: Need to regenerate seeded data to include author ID and a username, not just proper name
-app.get('/api/:username/campaigns', (req, res) => {
+app.get('/api/:user/campaigns', (req, res) => {
   allowCORS(res);
-  Models.getCampaignsByAuthor(db, req.params.username)
+  Models.getCampaignsByUser(db, req.params.user)
   .then((result) => {
     res.status(200).type('application/json');
     res.send(JSON.stringify(result));

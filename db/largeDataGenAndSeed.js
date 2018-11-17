@@ -3,40 +3,34 @@ const path = require('path');
 const faker = require('faker');
 const db = require('./index.js');
 
-// Lookup tables
-// the currency codes accepted by Kickstand
-const currCodes = ['USD', 'GBP', 'CAD', 'AUD', 'NZD', 'EUR', 'DKK',
-  'NOK', 'SEK', 'CHF', 'HKD', 'SGD', 'MXN', 'JPY'];
-
-// the accepted countries of origin for campaigns
-const countries = ['United States', 'United Kingdom', 'Canada', 'Australia', 'New Zealand',
-  'Netherlands', 'Denmark', 'Ireland', 'Norway', 'Sweden', 'Germany',
-  'France', 'Spain', 'Italy', 'Austria', 'Belgium', 'Switzerland', 'Luxembourg',
-  'Hong Kong', 'Singapore', 'Mexico', 'Japan'];
-
-const types = ['Art', 'Comics', 'Crafts', 'Dance', 'Design', 'Fashion', 'Film & Video',
-  'Food', 'Games', 'Journalism', 'Music', 'Photography', 'Publishing', 'Technology', 'Theater'];
-
 let start = new Date().getTime();
 const LIMIT = 1000000;
+const CAMPAIGNS_PER_PERSON = 100;
+const COUNTRIES = 22; // Index used for lookup tables in front end
+const TYPES = 15;
 const START_DATE = 1542240000; // November 15, 2018
+const DAYS = 90;
 
-// Create CSV columns. Use template literals to avoid string concatenation
-const writePrimaryData = function writePrimaryData(i) {
-  const data = i === 0 ? ['campaign,description,author,currency,pledged,goal,backers,endDate,location,_type'] : [];
-  for (let i = 0; i < LIMIT; i += 1) {
-    const name = faker.commerce.productName();
-    const desc = "Campaign description";
+// Create CSV columns, 100 campaigns per person 
+const writePrimaryData = function writePrimaryData(idx) {
+  const data = idx === 0 ? ['campaign,description,author,user,country,pledged,goal,backers,endDate,_type'] : [];
+  for (let i = 0; i < LIMIT / CAMPAIGNS_PER_PERSON; i += 1) {
     const author = faker.name.findName();
-    const currency = currCodes[Math.floor(Math.random() * currCodes.length)];
-    const pledgeGoal = Math.floor(Math.random() * 100000) + 50000;
-    const pledge = Math.floor(Math.random() * pledgeGoal);
-    const backers = Math.floor(Math.random() * 500);
-    const endDate = START_DATE + Math.floor(Math.random() * 30 + 15) * 86400;
-    const country = Math.floor(Math.random() * countries.length);
-    const type = Math.floor(Math.random() * types.length);
+    const user = faker.internet.userName();
+    const country = Math.floor(Math.random() * COUNTRIES);
+    const desc = "Campaign description";
 
-    data.push(`${name},${desc},${author},${currency},${pledgeGoal},${pledge},${backers},${endDate},${country},${type}`);
+    for (let j = 0; j < CAMPAIGNS_PER_PERSON; j += 1) {
+      const name = faker.commerce.productName();
+      const goal = Math.floor(Math.random() * 100000) + 50000;
+      const pledge = Math.floor(Math.random() * 100) > 50 ? 
+        Math.floor(Math.random * goal) + 100000 : Math.floor(Math.random() * goal);
+      const backers = Math.floor(Math.random() * 500);
+      const endDate = START_DATE + Math.floor(Math.random() * DAYS + 15) * 86400;
+      const type = Math.floor(Math.random() * TYPES);
+
+      data.push(`${name},${desc},${author},${user},${country},${pledge},${goal},${backers},${endDate},${type}`);
+    }
   }
 
   // Insert newline at end
@@ -63,7 +57,7 @@ const writePledgeData = function writePledgeData(i) {
     for (let j = 0; j < 50; j += 1) {
       const name = faker.name.findName();
       const pledge = Math.floor(Math.random() * 100) + 1;
-      const pledgeTime = START_DATE + Math.floor(Math.random() * 30) * 86400;
+      const pledgeTime = START_DATE + Math.floor(Math.random() * DAYS) * 86400;
 
       data.push(`${name},${pledge},${pledgeTime},${k}`);
     }
@@ -83,7 +77,7 @@ const writePledgeData = function writePledgeData(i) {
     .catch((err) => { console.error(err) });
 };
 
-async function seedCSVData() {
+async function seedPostgresData() {
   let csvFile = path.resolve(__dirname, './largeData.csv');
   if (process.platform === 'win32') {
     csvFile = csvFile.replace(/\\/g, '/');
@@ -92,9 +86,9 @@ async function seedCSVData() {
   start = new Date().getTime();
 
   // Create campaign table, load to DB
-  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (id SERIAL PRIMARY KEY, campaign TEXT, description TEXT, author TEXT, currency TEXT, pledged INT,
-    goal INT, backers INT, endDate INT, location INT, _type INT);`);
-  await db.query(`COPY campaigns(campaign, description, author, currency, pledged, goal, backers, endDate, location, _type) FROM '${csvFile}' CSV HEADER;`);
+  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (id SERIAL PRIMARY KEY, campaign TEXT, description TEXT, author TEXT, user TEXT, country INT, pledged INT,
+    goal INT, backers INT, endDate INT, _type INT);`);
+  await db.query(`COPY campaigns(campaign, description, author, user, country, pledged, goal, backers, endDate, _type) FROM '${csvFile}' CSV HEADER;`);
 
   console.log(`Seeded campaigns in ${new Date().getTime() - start} ms`);
 
@@ -126,7 +120,7 @@ async function writeAndSeed() {
     await writePledgeData(i);
   }
 
-  await seedCSVData();
+  await seedPostgresData();
 };
 
 writeAndSeed();

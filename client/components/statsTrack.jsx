@@ -6,6 +6,21 @@ import style from '../style.css';
 
 const HOST = 'http://localhost:3002';
 
+// Lookup tables
+// Accepted currency codes
+const currCodes = ['USD', 'GBP', 'CAD', 'AUD', 'NZD', 'EUR', 'DKK', 'EUR',
+  'NOK', 'SEK', 'CHF', 'EUR', 'EUR', 'EUR', 'EUR', 'EUR', 'EUR', 'EUR', 'EUR',
+  'HKD', 'SGD', 'MXN', 'JPY'];
+
+// the accepted countries of origin for campaigns
+const countries = ['United States', 'United Kingdom', 'Canada', 'Australia', 'New Zealand',
+  'Netherlands', 'Denmark', 'Ireland', 'Norway', 'Sweden', 'Germany',
+  'France', 'Spain', 'Italy', 'Austria', 'Belgium', 'Switzerland', 'Luxembourg',
+  'Hong Kong', 'Singapore', 'Mexico', 'Japan'];
+
+const types = ['Art', 'Comics', 'Crafts', 'Dance', 'Design', 'Fashion', 'Film & Video',
+  'Food', 'Games', 'Journalism', 'Music', 'Photography', 'Publishing', 'Technology', 'Theater'];
+
 export default class StatsTrack extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +29,7 @@ export default class StatsTrack extends React.Component {
       goal: 0,
       backers: 0,
       deadline: '',
-      currCode: 'USD',
+      currCode: 0,
     };
     this.loadCampaignStats = this.loadCampaignStats.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
@@ -36,7 +51,7 @@ export default class StatsTrack extends React.Component {
         goal: stats.goal,
         backers: stats.backers,
         endDate: stats.enddate,
-        currCode: stats.currency,
+        currCode: stats.country,
       });
     }).catch((err) => {
       throw err;
@@ -56,9 +71,9 @@ export default class StatsTrack extends React.Component {
     const { pledged, currCode, goal, endDate, backers } = this.state;
 
     // format funds as browser locale string with currency symbol/code
-    const pledgeAmount = pledged.toLocaleString(undefined, { style: 'currency', currency: currCode });
+    const pledgeAmount = pledged.toLocaleString(undefined, { style: 'currency', currency: currCodes[currCode] });
     // format goal as browser locale string with currency symbol/code
-    const goalAmount = goal.toLocaleString(undefined, { style: 'currency', currency: currCode });
+    const goalAmount = goal.toLocaleString(undefined, { style: 'currency', currency: currCodes[currCode] });
     // render text string for amount raised
     const goalLine = `pledged of ${goalAmount} goal`;
     // format backers numbers according to browser locale
