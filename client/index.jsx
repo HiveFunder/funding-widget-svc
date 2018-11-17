@@ -1,23 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Route, BrowserRouter } from 'react-router-dom';
+
 import StatsTrack from './components/statsTrack';
 import style from './style.css';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
+export default class App extends React.Component {
   render() {
     return (
       <div className={style.statstrack}>
-        <StatsTrack />
+        <StatsTrack campaignId={this.props.match.params.id} />
       </div>
     );
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('funding-widget'));
-
-export default App;
+ReactDOM.render((
+  <BrowserRouter>
+    <Route path="/:id" component={App} />
+  </BrowserRouter>
+), document.getElementById('funding-widget'));
