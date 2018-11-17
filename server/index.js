@@ -17,8 +17,8 @@ const allowCORS = function(res) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 }
 
-// Handles HTML requests for a given ID, will be routed by React Router
-app.get('/:author/:project', (req, res) => {
+// TODO: Handles HTML requests for a given ID, will be routed by React Router
+app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
@@ -43,19 +43,20 @@ app.get('/api/:campaign/stats', (req, res) => {
     res.status(400).type('application/json');
     res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
   } else {
-		Models.getCampaignById(db, req.params.campaign)
-		.then((result) => {
-		  res.status(200).type('application/json');
-		  res.send(JSON.stringify(result));
-		}).catch((err) => {
-		  res.status(500).type('Sorry, an error occurred!');
-		});
+    Models.getCampaignById(db, campaign)
+    .then((result) => {
+      res.status(200).type('application/json');
+      res.send(JSON.stringify(result));
+    }).catch((err) => {
+      res.status(500).type('Sorry, an error occurred!');
+    });
   }
 });
 
-app.get('/api/:author/campaigns', (req, res) => {
+// FIXME: Need to regenerate seeded data to include author ID and a username, not just proper name
+app.get('/api/:username/campaigns', (req, res) => {
   allowCORS(res);
-  Models.getCampaignsByAuthor(db, req.params.author)
+  Models.getCampaignsByAuthor(db, req.params.username)
   .then((result) => {
     res.status(200).type('application/json');
     res.send(JSON.stringify(result));
@@ -72,15 +73,15 @@ app.patch('/api/:campaign/stats', (req, res) => {
   if (Number.isNaN(campaign)) {
     res.status(400).type('application/json');
     res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
+  } else {
+    Models.pledgeCampaign(db, campaign, req.body)
+    .then((result) => {
+      res.status(200).type('application/json');
+      res.send(JSON.stringify(result));
+    }).catch((err) => {
+      res.status(500).type('Sorry, an error occurred!');
+    });
   }
-
-  Models.pledgeCampaign(db, req.params.campaign, req.body)
-  .then((result) => {
-    res.status(200).type('application/json');
-    res.send(JSON.stringify(result));
-  }).catch((err) => {
-    res.status(500).type('Sorry, an error occurred!');
-  });
 });
 
 app.put('/api/:campaign/stats', (req, res) => {
@@ -91,13 +92,13 @@ app.put('/api/:campaign/stats', (req, res) => {
     res.status(400).type('application/json');
     res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
   } else {
-		Models.updateCampaign(db, req.params.campaign, req.body)
-		.then((result) => {
-		  res.status(200).type('application/json');
-		  res.send(JSON.stringify(result));
-		}).catch((err) => {
-		  res.status(500).type('Sorry, an error occurred!');
-		});
+    Models.updateCampaign(db, campaign, req.body)
+    .then((result) => {
+      res.status(200).type('application/json');
+      res.send(JSON.stringify(result));
+    }).catch((err) => {
+      res.status(500).type('Sorry, an error occurred!');
+    });
   }
 });
 
@@ -110,15 +111,15 @@ app.delete('/api/:campaign/stats', (req, res) => {
     res.status(400).type('application/json');
     res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
   } else {
-		Models.deleteCampaign(db, req.params.campaign)
-		.then((result) => {
-		  res.status(200).type('application/json');
-		  res.send(JSON.stringify(result));
-		})
-		.catch((err) => {
-		  res.status(500).type('Sorry, an error occurred!');
-		});
-	}
+    Models.deleteCampaign(db, campaign)
+    .then((result) => {
+      res.status(200).type('application/json');
+      res.send(JSON.stringify(result));
+    })
+    .catch((err) => {
+      res.status(500).type('Sorry, an error occurred!');
+    });
+  }
 });
 
 app.listen(port, () => {

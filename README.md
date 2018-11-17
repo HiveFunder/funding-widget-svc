@@ -7,6 +7,10 @@
   - https://github.com/HiveFunder/support-module-svc
   - https://github.com/HiveFunder/updates-service
 
+## Setup Instructions
+To seed data for this project, first run `node db/largeDataGenAndSeed.js`, then run the bash shell script `./db/mongoSeed.sh`, both of which from the project root.
+If your laptop has an SSD, it should take no more than 30 minutes to generate and seed everything!
+
 ## CRUD Documentation
 
 ### Data Shape
