@@ -7,12 +7,13 @@ class Models {
   }
 
   static getCampaignsByUser(db, username) {
-    return db.query('SELECT * FROM campaigns WHERE user = $1;', [username])
+    return db.query('SELECT * FROM campaigns WHERE _user = $1;', [username])
+      .then((result) => result.rows)
       .catch((err) => { console.error(err); });
   }
 
   static addCampaign(db, data) {
-    return db.query('INSERT INTO campaigns (campaign, description, author, user, country, pledged, goal, backers, endDate, _type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);', Object.values(data))
+    return db.query('INSERT INTO campaigns (campaign, description, author, _user, country, pledged, goal, backers, endDate, _type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);', Object.values(data))
       .then(() => ({ success: true }));
   }
 
@@ -22,7 +23,7 @@ class Models {
   }
 
   static updateCampaign(db, id, data) {
-    return db.query('UPDATE campaigns SET campaign = $1, description = $2, author = $3, user = $4, country = $5, pledged = $6, goal = $7, backers = $8, endDate = $9, _type = $10, WHERE id = $11;', [data.campaign, data.description, data.author, data.user, data.country, data.pledged, data.goal, data.backers, data.endDate, data._type, id])
+    return db.query('UPDATE campaigns SET campaign = $1, description = $2, author = $3, _user = $4, country = $5, pledged = $6, goal = $7, backers = $8, endDate = $9, _type = $10, WHERE id = $11;', [data.campaign, data.description, data.author, data.user, data.country, data.pledged, data.goal, data.backers, data.endDate, data._type, id])
       .catch((err) => { console.error(err); });
   }
 

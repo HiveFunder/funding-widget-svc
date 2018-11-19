@@ -17,7 +17,6 @@ const allowCORS = function(res) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 }
 
-// TODO: Handles HTML requests for a given ID, will be routed by React Router
 app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
@@ -53,7 +52,6 @@ app.get('/api/:campaign/stats', (req, res) => {
   }
 });
 
-// FIXME: Need to regenerate seeded data to include author ID and a username, not just proper name
 app.get('/api/:user/campaigns', (req, res) => {
   allowCORS(res);
   Models.getCampaignsByUser(db, req.params.user)

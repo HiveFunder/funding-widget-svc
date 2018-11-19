@@ -14,11 +14,11 @@ If your laptop has an SSD, it should take no more than 30 minutes to generate an
 ## CRUD Documentation
 
 ### Data Shape
-  - Campaign: Campaign name, description, author, currency, pledge amount, pledge goal, backers, end date, type, location
+  - Campaign: Campaign name, description, author, username, country, pledge amount, pledge goal, backers, end date, type
   - Pledge: username, pledge amount, date
 
 ### Page Endpoint
-/:author/:campaignId/
+/:user/:campaignId/
 
 ### GET - /api/:campaign/stats
   - Get stats from a single campaign, for an item detail view.
@@ -26,8 +26,8 @@ If your laptop has an SSD, it should take no more than 30 minutes to generate an
   - Response data shape: Refer to Campaign data shape above
   - Error code: 400 for invalid author or campaign
 
-### GET - /api/:author/campaigns
-  - Get all campaigns for given author
+### GET - /api/:user/campaigns
+  - Get all campaigns for given author (user)
   - Query format: campaign user (string)
   - Response data shape: Array of all Campaigns from author
   - Error code: 400 for invalid author
