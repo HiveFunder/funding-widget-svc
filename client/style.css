@@ -19,7 +19,40 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-.statstrack {
+p {
+    display: block;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.fundingHeader {
+  font-family: 'Barlow', sans-serif;
+  grid-column: 1 / 5;
+  
+  /* the header has a 1-dimensional grid */
+  display: flex;
+  flex-direction: row;
+}
+
+.fundingHeaderName {
+  margin-top: 160px;
+  margin-left: 20px;
+}
+
+.fundingHeaderInfo {
+  margin-top: 120px;
+  margin-left: 100px;
+}
+
+.fundingTracker {
   width: 400px;
   font-family: 'Barlow', sans-serif;
   margin: 0;
@@ -27,12 +60,11 @@ time, mark, audio, video {
   border: 0;
   vertical-align: baseline;
   box-sizing: border-box;
-}
-
-.fundingTracker {
+    
   background-color: #FBFBFA;
   display: flex;
   flex-direction: column;
+  grid-column: 4 / 5;
 }
 
 .progressBar {
@@ -110,4 +142,10 @@ time, mark, audio, video {
 .units {
   composes: subtext;
   margin: 10px 0;
+}
+
+.campaign {
+  font-weight: 500;
+  font-size: 28px;
+  color: #000;
 }

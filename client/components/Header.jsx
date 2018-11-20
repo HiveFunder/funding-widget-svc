@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import style from '../style.css';
 
 const Header = ({ title, desc, author }) => (
-  <div>
-    <h2>{title}</h2>
-    <p>{desc}</p>
-    <p>{'By ' + author}</p>
+  <div className={style.fundingHeader}>
+    <p className={style.fundingHeaderName}>{'By ' + author}</p>
+    <div className={style.fundingHeaderInfo}>
+      <h2 className={style.campaign}>{title}</h2>
+      <p>{desc}</p>
+    </div>
   </div>
 );
 

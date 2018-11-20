@@ -64,7 +64,7 @@ export default class App extends React.Component {
     const { pledged, currCode, goal, endDate, backers, title, desc, author } = this.state;
 
     return (
-      <div className={style.statstrack}>
+      <div className={style.statsGrid}>
         <Header 
           title={title}
           desc={desc}
