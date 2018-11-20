@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "build": "webpack --debug -w",
-    "server-dev": "nodemon server/server.js",
+    "server-dev": "nodemon server",
     "seed": "node db/largeDataGenAndSeed.js",
     "test": "jest --coverage"
   },
