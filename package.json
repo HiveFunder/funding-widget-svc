@@ -5,7 +5,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "npx webpack -w",
+    "build": "webpack --debug -w",
     "server-dev": "nodemon server/server.js",
     "seed": "node db/largeDataGenAndSeed.js",
     "test": "jest --coverage"
@@ -17,12 +17,8 @@
     }
   },
   "dependencies": {
-    "acorn": "^6.0.2",
-    "ajv": "^6.5.5",
-    "cors": "^2.8.5",
     "express": "^4.16.4",
     "faker": "^4.1.0",
-    "fs": "0.0.1-security",
     "moment": "^2.22.2",
     "mongodb": "^3.1.9",
     "mongoose": "^5.3.12",
@@ -32,6 +28,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-router-dom": "^4.3.1",
     "request": "^2.88.0"
   },
   "devDependencies": {
