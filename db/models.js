@@ -1,7 +1,8 @@
 // Static methods for database interactions
 class Models {
+  // We may assume there is only one row to procure
   static getCampaignById(db, id) {
-    return db.query('SELECT * FROM campaigns WHERE id = $1;', [id])
+    return db.query('SELECT * FROM campaigns WHERE id = $1 LIMIT 1;', [id])
       .then((result) => result.rows[0])
       .catch((err) => { console.error(err); });
   }

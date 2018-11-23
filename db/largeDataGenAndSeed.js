@@ -112,6 +112,12 @@ async function seedPostgresData() {
   }
 
   console.log(`Seeded pledges in ${new Date().getTime() - start} ms`);
+  
+  // Create indices for country, type, author
+  await db.query('CREATE INDEX campaigns_type_idx ON campaigns(_type);');
+  await db.query('CREATE INDEX campaigns_country_idx ON campaigns(country);');
+  await db.query('CREATE INDEX campaigns_user_idx ON campaigns(_user);');
+  
   db.end();
 }
 
