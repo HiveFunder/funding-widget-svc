@@ -8,7 +8,7 @@ const Header = ({ title, desc, author }) => (
     <p className={style.fundingHeaderName}>{'By ' + author}</p>
     <div className={style.fundingHeaderInfo}>
       <h2 className={style.campaign}>{title}</h2>
-      <p>{desc}</p>
+      <p className={style.campaignDesc}>{desc}</p>
     </div>
   </div>
 );
