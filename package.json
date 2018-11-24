@@ -8,7 +8,8 @@
     "build": "webpack --debug -w",
     "server-dev": "nodemon server",
     "seed": "node db/largeDataGenAndSeed.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "stress": "k6 run test/k6_test.js"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>enzyme.config.js",
@@ -19,6 +20,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "faker": "^4.1.0",
+    "k6": "0.0.0",
     "moment": "^2.22.2",
     "mongodb": "^3.1.9",
     "mongoose": "^5.3.12",
