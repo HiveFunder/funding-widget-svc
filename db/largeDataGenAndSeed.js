@@ -4,7 +4,8 @@ const faker = require('faker');
 const db = require('./index.js');
 
 let start = new Date().getTime();
-const LIMIT = 1000000;
+const LIMIT = 10000;
+const ITERATIONS = 1000;
 const CAMPAIGNS_PER_PERSON = 100;
 const COUNTRIES = 22; // Index used for lookup tables in front end
 const TYPES = 15;
@@ -112,18 +113,18 @@ async function seedPostgresData() {
   }
 
   console.log(`Seeded pledges in ${new Date().getTime() - start} ms`);
-  
+
   // Create indices for country, type, author
   await db.query('CREATE INDEX campaigns_type_idx ON campaigns(_type);');
   await db.query('CREATE INDEX campaigns_country_idx ON campaigns(country);');
   await db.query('CREATE INDEX campaigns_user_idx ON campaigns(_user);');
-  
+
   db.end();
 }
 
 // Create CSV files with up to 10 million entries of campaigns (projects) and 50 million pledges
 async function writeAndSeed() {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < ITERATIONS; i++) {
     await writePrimaryData(i);
   }
   for (let i = 0; i < 100; i++) {

@@ -5,7 +5,7 @@ const path = require('path');
 const Models = require('../db/models.js');
 const db = require('../db');
 
-const port = 3002;
+const port = 80;
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, '../public')));
