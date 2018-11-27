@@ -21,7 +21,7 @@ const writePrimaryData = function writePrimaryData(idx) {
     const author = `${first} ${last}`;
     const user = `${first}${Math.floor(Math.random() * 1000)}`;
     const country = Math.floor(Math.random() * COUNTRIES);
-    const desc = "Campaign description";
+    const desc = faker.lorem.sentences(2);
 
     for (let j = 0; j < CAMPAIGNS_PER_PERSON; j += 1) {
       const name = faker.commerce.productName();
