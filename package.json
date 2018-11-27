@@ -5,7 +5,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "webpack --debug -w",
+    "build": "webpack --mode production --devtool=false",
+    "dev": "webpack --debug -w",
     "server-dev": "nodemon server",
     "seed": "node db/largeDataGenAndSeed.js",
     "test": "jest --coverage",

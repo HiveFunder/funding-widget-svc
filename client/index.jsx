@@ -6,7 +6,7 @@ import Header from './components/Header';
 import StatsTrack from './components/statsTrack';
 import style from './style.css';
 
-const HOST = 'http://localhost:3002';
+const HOST = 'http://ec2-13-56-189-43.us-west-1.compute.amazonaws.com';
 
 export default class App extends React.Component {
   constructor(props) {
