@@ -18,6 +18,10 @@ const allowCORS = function(res) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 }
 
+const parseIntFromBase64 = function(base64) {
+  return Number.parseInt(Buffer.from(base64, 'base64').toString(), 10);
+}
+
 app.get('/:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
@@ -35,13 +39,13 @@ app.post('/api/new/stats', (req, res) => {
 });
 
 // R endpoints
-app.get('/api/:campaign/stats', (req, res) => {
+app.get('/api/:base64/stats', (req, res) => {
   allowCORS(res);
-  const campaign = Number.parseInt(req.params.campaign, 10);
+  const campaign = parseIntFromBase64(req.params.base64);
 
   if (Number.isNaN(campaign)) {
     res.status(400).type('application/json');
-    res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
+    res.send(JSON.stringify({ success: false, error: 'Campaign ID is not valid' }));
   } else {
     Models.getCampaignById(db, campaign)
     .then((result) => {
@@ -65,13 +69,13 @@ app.get('/api/:user/campaigns', (req, res) => {
 });
 
 // U endpoints
-app.patch('/api/:campaign/stats', (req, res) => {
+app.patch('/api/:base64/stats', (req, res) => {
   allowCORS(res);
-  const campaign = Number.parseInt(req.params.campaign, 10);
+  const campaign = parseIntFromBase64(req.params.base64);
 
   if (Number.isNaN(campaign)) {
     res.status(400).type('application/json');
-    res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
+    res.send(JSON.stringify({ success: false, error: 'Campaign ID is not valid' }));
   } else {
     Models.pledgeCampaign(db, campaign, req.body)
     .then((result) => {
@@ -83,13 +87,13 @@ app.patch('/api/:campaign/stats', (req, res) => {
   }
 });
 
-app.put('/api/:campaign/stats', (req, res) => {
+app.put('/api/:base64/stats', (req, res) => {
   allowCORS(res);
-  const campaign = Number.parseInt(req.params.campaign, 10);
+  const campaign = parseIntFromBase64(req.params.base64);
 
   if (Number.isNaN(campaign)) {
     res.status(400).type('application/json');
-    res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
+    res.send(JSON.stringify({ success: false, error: 'Campaign ID is not valid' }));
   } else {
     Models.updateCampaign(db, campaign, req.body)
     .then((result) => {
@@ -102,13 +106,13 @@ app.put('/api/:campaign/stats', (req, res) => {
 });
 
 // D endpoint
-app.delete('/api/:campaign/stats', (req, res) => {
+app.delete('/api/:base64/stats', (req, res) => {
   allowCORS(res);
-  const campaign = Number.parseInt(req.params.campaign, 10);
+  const campaign = parseIntFromBase64(req.params.base64);
 
   if (Number.isNaN(campaign)) {
     res.status(400).type('application/json');
-    res.send(JSON.stringify({ success: false, error: 'Campaign is not a number' }));
+    res.send(JSON.stringify({ success: false, error: 'Campaign ID is not valid' }));
   } else {
     Models.deleteCampaign(db, campaign)
     .then((result) => {
