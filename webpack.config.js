@@ -1,21 +1,29 @@
 const path = require('path');
 const webpack = require('webpack');
+const nodeExternals = require('webpack-node-externals');
 
-module.exports = {
-  entry: path.resolve(__dirname, 'client/index.jsx'),
+const common = {
+  context: __dirname + '/client',
   devtool: 'source-map',
   mode: 'development',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public'),
-  },
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  module: {
+  plugins: [
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+  ],
+};
+
+const frontend = {
+   entry: './index.jsx',
+   output: {
+     filename: 'bundle.js',
+     path: path.resolve(__dirname, 'public'),
+   },
+   module: {
     rules: [
       {
-        test: /\.m?(js|jsx)$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -26,8 +34,37 @@ module.exports = {
         loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
       },
     ],
-  },
-  plugins: [
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-  ],
+  }
+   // other loaders, plugins etc. specific for frontend
 };
+
+const server = {
+   entry: './server.js',
+   output: {
+     filename: 'bundle.server.js',
+     path: path.resolve(__dirname, 'public'),
+     libraryTarget: 'commonjs-module'
+   },
+   target: 'node',
+   externals: [nodeExternals()],
+   module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.css$/,
+        loader: 'isomorphic-style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+      },
+    ],
+  }
+};
+
+module.exports = [
+  Object.assign({} , common, frontend),
+  Object.assign({} , common, server)
+];

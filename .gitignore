@@ -23,6 +23,8 @@ coverage
 # Compiled Dirs (http://nodejs.org/api/addons.html)
 public/bundle.js
 public/bundle.js.map
+public/bundle.server.js
+public/bundle.server.js.map
 
 db/connection.js
 *.csv
