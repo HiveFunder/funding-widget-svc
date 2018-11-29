@@ -34,7 +34,12 @@ const frontend = {
         loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
       },
     ],
-  }
+  },
+  externals: {
+    // Use external version of React. Make sure they are the same names used in the imports in JSX files!
+    "react": "React",
+    "react-dom": "ReactDOM"
+  },
    // other loaders, plugins etc. specific for frontend
 };
 

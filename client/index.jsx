@@ -4,7 +4,7 @@ import { Route, BrowserRouter } from 'react-router-dom';
 
 import App from './components/App';
 
-ReactDOM.render((
+ReactDOM.hydrate((
   <BrowserRouter>
     <Route path="/:id" component={App} />
   </BrowserRouter>
