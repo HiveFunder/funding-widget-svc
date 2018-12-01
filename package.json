@@ -6,9 +6,10 @@
   "license": "ISC",
   "scripts": {
     "build": "webpack --debug -w",
-    "server-dev": "nodemon server/server.js",
+    "server-dev": "nodemon server",
     "seed": "node db/largeDataGenAndSeed.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "stress": "k6 run test/k6_test.js"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>enzyme.config.js",
@@ -49,6 +50,8 @@
     "eslint-plugin-react": "^7.11.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^23.6.0",
+    "k6": "0.0.0",
+    "newrelic": "^4.11.0",
     "react-test-renderer": "^16.6.3",
     "regenerator-runtime": "^0.12.1",
     "style-loader": "^0.23.1",

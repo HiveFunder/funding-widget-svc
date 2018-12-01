@@ -1,10 +1,10 @@
 import React from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 import BackButton from './BackButton';
 import ProgressBar from './ProgressBar';
-import style from '../style.css';
 
-const HOST = 'http://localhost:3002';
+import style from '../style.css';
 
 // Lookup tables
 // Accepted currency codes
@@ -22,53 +22,8 @@ const types = ['Art', 'Comics', 'Crafts', 'Dance', 'Design', 'Fashion', 'Film & 
   'Food', 'Games', 'Journalism', 'Music', 'Photography', 'Publishing', 'Technology', 'Theater'];
 
 export default class StatsTrack extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pledged: 0,
-      goal: 0,
-      backers: 0,
-      deadline: '',
-      currCode: 0,
-    };
-    this.loadCampaignStats = this.loadCampaignStats.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
-  }
-
-  componentDidMount() {
-    this.loadCampaignStats();
-  }
-
-  loadCampaignStats() {
-    const { campaignId } = this.props;
-
-    // ask the server to retrieve campaign data from db
-    fetch(`${HOST}/api/${campaignId}/stats`)
-    .then(res => res.json())
-    .then((stats) => { // update component state with db data
-      this.setState({
-        pledged: stats.pledged,
-        goal: stats.goal,
-        backers: stats.backers,
-        endDate: stats.enddate,
-        currCode: stats.country,
-      });
-    }).catch((err) => {
-      throw err;
-    });
-  }
-
-  clickHandler() { // increase pledged total and increment backer count
-    const newPledge = 1 + Math.floor(Math.random() * 50);
-    const { pledged, backers } = this.state;
-    this.setState({
-      pledged: (pledged + newPledge),
-      backers: (backers + 1),
-    });
-  }
-
   render() {
-    const { pledged, currCode, goal, endDate, backers } = this.state;
+    const { pledged, currCode, goal, endDate, backers, onClick } = this.props;
 
     // format funds as browser locale string with currency symbol/code
     const pledgeAmount = pledged.toLocaleString(undefined, { style: 'currency', currency: currCodes[currCode] });
@@ -83,10 +38,9 @@ export default class StatsTrack extends React.Component {
     let timeUnits = 'days to go';
 
     if (timeLeft <= 0) { // reformat remaining time if less than one day
-      timeLeft = moment(endDate * 1000).diff(moment(), 'hours', true) || 0;
+      timeLeft = Math.floor(moment(endDate * 1000).diff(moment(), 'hours', true)) || 0;
       timeUnits = 'hours to go';
     }
-
 
     return (
       <div className={style.fundingTracker}>
@@ -105,8 +59,17 @@ export default class StatsTrack extends React.Component {
           <h2 className={style.remaining}>{timeLeft}</h2>
           <div className={style.units}>{timeUnits}</div>
         </div>
-        <BackButton clickToBack={this.clickHandler} />
+        <BackButton clickToBack={onClick} />
       </div>
     );
   }
 }
+
+StatsTrack.propTypes = {
+  pledged: PropTypes.number.isRequired,
+  currCode: PropTypes.number.isRequired,
+  goal: PropTypes.number.isRequired,
+  endDate: PropTypes.number.isRequired,
+  backers: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired,
+};

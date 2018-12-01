@@ -88,8 +88,8 @@ async function seedPostgresData() {
   start = new Date().getTime();
 
   // Create campaign table, load to DB
-  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (id SERIAL PRIMARY KEY, campaign TEXT, description TEXT, author TEXT, _user TEXT, country INT, pledged INT,
-    goal INT, backers INT, endDate INT, _type INT);`)
+  await db.query(`CREATE TABLE IF NOT EXISTS campaigns (id SERIAL PRIMARY KEY, campaign TEXT, description TEXT, author TEXT, _user TEXT, country SMALLINT, pledged INT,
+    goal INT, backers INT, endDate INT, _type SMALLINT);`)
     .catch((err) => { console.error(err); });
   await db.query(`COPY campaigns(campaign, description, author, _user, country, pledged, goal, backers, endDate, _type) FROM '${csvFile}' CSV HEADER;`)
     .catch((err) => { console.error(err); });
@@ -99,7 +99,7 @@ async function seedPostgresData() {
   start = new Date().getTime();
 
   // Create and fill pledges table
-  await db.query(`CREATE TABLE IF NOT EXISTS pledges (id SERIAL PRIMARY KEY, name TEXT, pledge INT, pledgeTime INT, campaignIdx INT);`)
+  await db.query(`CREATE TABLE IF NOT EXISTS pledges (id SERIAL PRIMARY KEY, name TEXT, pledge SMALLINT, pledgeTime INT, campaignIdx INT);`)
     .catch((err) => { console.error(err) });
 
   for (let i = 0; i < 100; i++) {
@@ -112,6 +112,12 @@ async function seedPostgresData() {
   }
 
   console.log(`Seeded pledges in ${new Date().getTime() - start} ms`);
+  
+  // Create indices for country, type, author
+  await db.query('CREATE INDEX campaigns_type_idx ON campaigns(_type);');
+  await db.query('CREATE INDEX campaigns_country_idx ON campaigns(country);');
+  await db.query('CREATE INDEX campaigns_user_idx ON campaigns(_user);');
+  
   db.end();
 }
 

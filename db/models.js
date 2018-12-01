@@ -1,14 +1,25 @@
 // Static methods for database interactions
 class Models {
+  // We may assume there is only one row to procure
   static getCampaignById(db, id) {
-    return db.query('SELECT * FROM campaigns WHERE id = $1;', [id])
+    return db.query('SELECT * FROM campaigns WHERE id = $1 LIMIT 1;', [id])
       .then((result) => result.rows[0])
+      .then((obj) => {
+        obj.id = Buffer.from(obj.id.toString()).toString('base64');
+        return obj;
+      }) //convert ID to base64
       .catch((err) => { console.error(err); });
   }
 
   static getCampaignsByUser(db, username) {
     return db.query('SELECT * FROM campaigns WHERE _user = $1;', [username])
       .then((result) => result.rows)
+      .then((data) => {
+        return data.map((obj) => {
+          obj.id = Buffer.from(obj.id.toString()).toString('base64');
+          return obj;
+        });
+      })
       .catch((err) => { console.error(err); });
   }
 
